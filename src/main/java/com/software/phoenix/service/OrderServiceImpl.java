@@ -32,14 +32,14 @@ public class OrderServiceImpl implements OrderService {
 
     public Order deleteOrder(Long id, User user) {
         Order order = getOrder(id);
-        if(!isHavePermission(order, user)) return null;
+        if(!hasPermission(order, user)) return null;
         orderRepository.delete(order);
         return order;
     }
 
     public Order updateOrder(Long id, User user, OrderRequest request) {
         Order order = getOrder(id);
-        if(!isHavePermission(order, user)) return null;
+        if(!hasPermission(order, user)) return null;
 
         if (request.getProduct() != null) {
             order.setProduct(request.getProduct());
@@ -63,7 +63,7 @@ public class OrderServiceImpl implements OrderService {
                 -> new NoSuchElementException(String.format("Order with id '%d' not found", id)));
     }
 
-    private boolean isHavePermission(Order order, User user) {
+    private boolean hasPermission(Order order, User user) {
         return order.getUser().getId() == user.getId();
     }
 }
