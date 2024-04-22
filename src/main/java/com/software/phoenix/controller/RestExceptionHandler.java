@@ -1,5 +1,6 @@
 package com.software.phoenix.controller;
 
+import com.software.phoenix.exception.PasswordMismatchException;
 import com.software.phoenix.model.response.ApiError;
 import org.hibernate.NonUniqueObjectException;
 import org.springframework.http.HttpStatus;
@@ -26,5 +27,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ApiError apiError = new ApiError("Login already exists",
                 String.format("User with login '%s' already exists", ex.getEntityName()));
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(PasswordMismatchException.class)
+    protected ResponseEntity<?> handleIllegalArgumentException(PasswordMismatchException ex, WebRequest webRequest) {
+        ApiError apiError = new ApiError(ex.getMessage(), null);
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 }
