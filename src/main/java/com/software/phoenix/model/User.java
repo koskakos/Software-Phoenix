@@ -23,10 +23,9 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-@EntityListeners(AuditingEntityListener.class)
 public class User extends SystemFields implements UserDetails{
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "login", unique = true, nullable = false)
     private String login;
 
     @JsonIgnore
@@ -38,6 +37,10 @@ public class User extends SystemFields implements UserDetails{
 
     @Column(name = "avatar_url")
     private String avatarUrl;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<Order> orders = new LinkedList<>();
 
     public User(Long id, LocalDateTime createdAt, LocalDateTime updatedAt) {
         super(id, createdAt, updatedAt);

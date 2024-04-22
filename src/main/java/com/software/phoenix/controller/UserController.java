@@ -25,4 +25,9 @@ public class UserController {
     public ResponseEntity<?> getAuthenticatedUser() {
         return ResponseEntity.ok(userService.getAuthenticatedUser());
     }
+
+    @GetMapping("/orders")
+    public ResponseEntity<?> getAllOrders() {
+        return ResponseEntity.ok(userService.getAllOrders(userService.getAuthenticatedUser()));
+    }
 }

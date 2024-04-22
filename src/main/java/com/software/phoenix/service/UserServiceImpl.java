@@ -1,5 +1,6 @@
 package com.software.phoenix.service;
 
+import com.software.phoenix.model.Order;
 import com.software.phoenix.model.User;
 import com.software.phoenix.model.request.SignUpRequest;
 import com.software.phoenix.model.request.UpdateUserRequest;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -43,17 +45,21 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    public User updateUser(UpdateUserRequest updateUserRequest) {
+    public User updateUser(UpdateUserRequest request) {
         User user = getAuthenticatedUser();
 
-        if (updateUserRequest.getFullname() != null) {
-            user.setFullname(updateUserRequest.getFullname().trim());
+        if (request.getFullname() != null) {
+            user.setFullname(request.getFullname().trim());
         }
-        if (updateUserRequest.getAvatarUrl() != null) {
-            user.setAvatarUrl(updateUserRequest.getAvatarUrl().trim());
+        if (request.getAvatarUrl() != null) {
+            user.setAvatarUrl(request.getAvatarUrl().trim());
         }
 
         return userRepository.save(user);
+    }
+
+    public List<Order> getAllOrders(User user) {
+        return user.getOrders();
     }
 
     public User getUserById(Long id) {
