@@ -1,6 +1,7 @@
 package com.software.phoenix.service;
 
 import com.software.phoenix.model.User;
+import com.software.phoenix.exception.PasswordMismatchException;
 import com.software.phoenix.model.request.SignInRequest;
 import com.software.phoenix.model.request.SignUpRequest;
 import com.software.phoenix.model.response.JwtAuthenticationResponse;
@@ -32,6 +33,8 @@ public class JwtAuthenticationServiceImpl implements AuthenticationService<JwtAu
 
     @Override
     public JwtAuthenticationResponse signup(SignUpRequest request) {
+        if(!request.getPassword().equals(request.getPasswordConfirmation()))
+            throw new PasswordMismatchException();
         User user = userService.createUser(request, passwordEncoder);
         return JwtAuthenticationResponse.builder()
                 .accessToken(jwtService.generateAccessToken(user))

@@ -1,7 +1,9 @@
 package com.software.phoenix.service;
 
+import com.software.phoenix.model.Order;
 import com.software.phoenix.model.User;
 import com.software.phoenix.model.request.SignUpRequest;
+import com.software.phoenix.model.request.UpdateUserRequest;
 import com.software.phoenix.repository.UserRepository;
 import com.software.phoenix.service.interfaces.UserService;
 import org.hibernate.NonUniqueObjectException;
@@ -11,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -31,20 +34,32 @@ public class UserServiceImpl implements UserService {
     }
 
     public User createUser(SignUpRequest request, PasswordEncoder passwordEncoder) {
+        if(userRepository.existsByLogin(request.getLogin()))
+            throw new NonUniqueObjectException("", null, request.getLogin());
         User user = User.builder()
                 .login(request.getLogin())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .fullname(request.getFullname())
-                .avatarUrl(request.getAvatar_url())
+                .fullname(request.getFullname().trim())
+                .avatarUrl(request.getAvatarUrl().trim())
                 .build();
-        return saveUser(user);
+        return userRepository.save(user);
     }
 
-    public User saveUser(User user) {
-        if(userRepository.existsByLogin(user.getLogin()))
-            throw new NonUniqueObjectException("", null, user.getLogin());
-        userRepository.save(user);
-        return user;
+    public User updateUser(UpdateUserRequest request) {
+        User user = getAuthenticatedUser();
+
+        if (request.getFullname() != null) {
+            user.setFullname(request.getFullname().trim());
+        }
+        if (request.getAvatarUrl() != null) {
+            user.setAvatarUrl(request.getAvatarUrl().trim());
+        }
+
+        return userRepository.save(user);
+    }
+
+    public List<Order> getAllOrders(User user) {
+        return user.getOrders();
     }
 
     public User getUserById(Long id) {

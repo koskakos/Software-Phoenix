@@ -6,6 +6,7 @@ import com.software.phoenix.model.response.JwtAuthenticationResponse;
 import com.software.phoenix.service.CookieService;
 import com.software.phoenix.service.interfaces.AuthenticationService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class AuthenticationController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(HttpServletResponse response,
-                                                            @RequestBody SignUpRequest request) {
+                                    @Valid @RequestBody SignUpRequest request) {
         JwtAuthenticationResponse authenticationResponse = authenticationService.signup(request);
         cookieService.setAuthenticationCookies(response, authenticationResponse);
         return ResponseEntity.ok(authenticationResponse);
@@ -30,7 +31,7 @@ public class AuthenticationController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> signin(HttpServletResponse response,
-                                                            @RequestBody SignInRequest request) {
+                                    @Valid @RequestBody SignInRequest request) {
         JwtAuthenticationResponse authenticationResponse = authenticationService.signin(request);
         cookieService.setAuthenticationCookies(response, authenticationResponse);
         return ResponseEntity.ok(authenticationResponse);

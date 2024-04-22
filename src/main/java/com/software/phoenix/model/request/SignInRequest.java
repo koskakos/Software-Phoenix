@@ -1,15 +1,13 @@
 package com.software.phoenix.model.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class SignInRequest {
+    @NotEmpty(message = "The login is required.")
     private String login;
+
+    @NotEmpty(message = "The password is required.")
     private String password;
 }

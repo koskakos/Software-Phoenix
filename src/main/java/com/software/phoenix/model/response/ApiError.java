@@ -14,6 +14,7 @@ public class ApiError {
 
     private String message;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String debugMessage;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
