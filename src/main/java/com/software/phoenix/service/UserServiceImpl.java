@@ -2,6 +2,7 @@ package com.software.phoenix.service;
 
 import com.software.phoenix.model.User;
 import com.software.phoenix.model.request.SignUpRequest;
+import com.software.phoenix.model.request.UpdateUserRequest;
 import com.software.phoenix.repository.UserRepository;
 import com.software.phoenix.service.interfaces.UserService;
 import org.hibernate.NonUniqueObjectException;
@@ -31,20 +32,28 @@ public class UserServiceImpl implements UserService {
     }
 
     public User createUser(SignUpRequest request, PasswordEncoder passwordEncoder) {
+        if(userRepository.existsByLogin(request.getLogin()))
+            throw new NonUniqueObjectException("", null, request.getLogin());
         User user = User.builder()
                 .login(request.getLogin())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .fullname(request.getFullname())
-                .avatarUrl(request.getAvatar_url())
+                .avatarUrl(request.getAvatarUrl())
                 .build();
-        return saveUser(user);
+        return userRepository.save(user);
     }
 
-    public User saveUser(User user) {
-        if(userRepository.existsByLogin(user.getLogin()))
-            throw new NonUniqueObjectException("", null, user.getLogin());
-        userRepository.save(user);
-        return user;
+    public User updateUser(UpdateUserRequest updateUserRequest) {
+        User user = getAuthenticatedUser();
+
+        if (updateUserRequest.getFullname() != null) {
+            user.setFullname(updateUserRequest.getFullname());
+        }
+        if (updateUserRequest.getAvatarUrl() != null) {
+            user.setAvatarUrl(updateUserRequest.getAvatarUrl());
+        }
+
+        return userRepository.save(user);
     }
 
     public User getUserById(Long id) {
