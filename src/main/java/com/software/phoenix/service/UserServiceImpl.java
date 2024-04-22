@@ -37,8 +37,8 @@ public class UserServiceImpl implements UserService {
         User user = User.builder()
                 .login(request.getLogin())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .fullname(request.getFullname())
-                .avatarUrl(request.getAvatarUrl())
+                .fullname(request.getFullname().trim())
+                .avatarUrl(request.getAvatarUrl().trim())
                 .build();
         return userRepository.save(user);
     }
@@ -47,10 +47,10 @@ public class UserServiceImpl implements UserService {
         User user = getAuthenticatedUser();
 
         if (updateUserRequest.getFullname() != null) {
-            user.setFullname(updateUserRequest.getFullname());
+            user.setFullname(updateUserRequest.getFullname().trim());
         }
         if (updateUserRequest.getAvatarUrl() != null) {
-            user.setAvatarUrl(updateUserRequest.getAvatarUrl());
+            user.setAvatarUrl(updateUserRequest.getAvatarUrl().trim());
         }
 
         return userRepository.save(user);

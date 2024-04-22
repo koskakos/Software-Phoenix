@@ -33,7 +33,7 @@ public class User extends SystemFields implements UserDetails{
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "fullname", nullable = false)
+    @Column(name = "fullname", nullable = false, length = 50)
     private String fullname;
 
     @Column(name = "avatar_url")
