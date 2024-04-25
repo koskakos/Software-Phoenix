@@ -40,8 +40,10 @@ public class UserServiceImpl implements UserService {
                 .login(request.getLogin())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .fullname(request.getFullname().trim())
-                .avatarUrl(request.getAvatarUrl().trim())
                 .build();
+        if (request.getAvatarUrl() != null) {
+            user.setAvatarUrl(request.getAvatarUrl().trim());
+        }
         return userRepository.save(user);
     }
 
