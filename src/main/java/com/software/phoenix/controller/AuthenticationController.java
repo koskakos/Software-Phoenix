@@ -5,6 +5,7 @@ import com.software.phoenix.model.request.SignUpRequest;
 import com.software.phoenix.model.response.JwtAuthenticationResponse;
 import com.software.phoenix.service.CookieService;
 import com.software.phoenix.service.interfaces.AuthenticationService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class AuthenticationController {
         this.cookieService = cookieService;
     }
 
+    @Operation(summary = "Sign Up")
     @PostMapping("/signup")
     public ResponseEntity<?> signup(HttpServletResponse response,
                                     @Valid @RequestBody SignUpRequest request) {
@@ -29,6 +31,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationResponse);
     }
 
+    @Operation(summary = "Sign In")
     @PostMapping("/signin")
     public ResponseEntity<?> signin(HttpServletResponse response,
                                     @Valid @RequestBody SignInRequest request) {
@@ -37,6 +40,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationResponse);
     }
 
+    @Operation(summary = "Refresh JWT token")
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(HttpServletResponse response,
                                                              @CookieValue("refreshToken") String refreshToken) {
